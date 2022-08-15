@@ -31,6 +31,8 @@ SPELLTEMP = os.environ.get("SPELLTEMP", "Hehe")[:4550]
 BUTTONS = {}
 SPELL_CHECK = {}
 
+ads = (enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.OWNER)
+to = (enums.ChatType.GROUP, enums.ChatType.SUPERGROUP)
 
 @Client.on_message(filters.group & filters.text & filters.incoming)
 async def give_filter(client, message):
@@ -622,7 +624,7 @@ async def auto_filter(client, msg, spoll=False):
             files, offset, total_results = await get_search_results(search.lower(), offset=0, filter=True)
             if not files:
                 if settings["spell_check"]:
-                    return await advantage_spell_chok(msg)
+                    return await advantage_spell_chok(client, msg)
                 else:
                     return
         else:
