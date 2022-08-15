@@ -128,10 +128,10 @@ async def reason_text_cb(c: Client, q: CallbackQuery):
         return await q.answer(f"{q.from_user.first_name}, this is not for you!!", show_alert=True)
     heh = await q.message.edit_text(
         text="The reasons for unavailability:\n"
-             "- Movie is released in Theatre\n"
-             "- Movie file is not available in Telegram \n"
-             "- Not available on OTT platforms\n"
-             "- Your text contains special characters like (-:')", 
+             "»  Movie is released in Theatre\n"
+             "»  Movie file is not available in Telegram \n"
+             "»  Not available on OTT platforms\n"
+             "»  Your text contains special characters like (-:')", 
         disable_web_page_preview=True,
     )
     await asyncio.sleep(60)
