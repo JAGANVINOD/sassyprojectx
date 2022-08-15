@@ -1,5 +1,6 @@
 # Kanged From @TroJanZheX
 import asyncio
+import os
 import re
 import ast
 import math
@@ -26,6 +27,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
+SPELLTEMP = os.environ.get("SPELLTEMP", "Hehe")[:4550]
 BUTTONS = {}
 SPELL_CHECK = {}
 
@@ -116,28 +118,21 @@ async def next_page(bot, query):
     await query.answer()
 
 
-@Client.on_callback_query(filters.regex(r"^spolling"))
-async def advantage_spoll_choker(bot, query):
-    _, user, movie_ = query.data.split('#')
-    if int(user) != 0 and query.from_user.id != int(user):
-        return await query.answer("okDa", show_alert=True)
-    if movie_ == "close_spellcheck":
-        return await query.message.delete()
-    movies = SPELL_CHECK.get(query.message.reply_to_message.id)
-    if not movies:
-        return await query.answer("You are clicking on an old button which is expired.", show_alert=True)
-    movie = movies[(int(movie_))]
-    await query.answer('Checking for Movie in database...')
-    k = await manual_filters(bot, query.message, text=movie)
-    if k == False:
-        files, offset, total_results = await get_search_results(movie, offset=0, filter=True)
-        if files:
-            k = (movie, files, offset, total_results)
-            await auto_filter(bot, query, k)
-        else:
-            k = await query.message.edit('This Movie Not Found In DataBase')
-            await asyncio.sleep(10)
-            await k.delete()
+@Client.on_callback_query(filters.regex("^reason$"))
+async def reason_text_cb(c: Client, q: CallbackQuery):
+    q_user = q.from_user.id
+    og_user = q.message.reply_to_message.from_user.id
+    if int(q_user) != int(og_user):
+        return await q.answer(f"{q.from_user.first_name}, this is not for you!!", show_alert=True)
+    heh = await q.message.edit_text(
+        text="The reasons for unavailability:\n"
+             "- Movie is released in Theatre\n"
+             "- Movie file is not available in Telegram \n"
+             "- Not available on OTT platforms\n",
+        disable_web_page_preview=True,
+    )
+    await asyncio.sleep(60)
+    await heh.delete()
 
 
 @Client.on_callback_query()
@@ -726,59 +721,54 @@ async def auto_filter(client, msg, spoll=False):
         await msg.message.delete()
 
 
-async def advantage_spell_chok(msg):
-    query = re.sub(
-        r"\b(pl(i|e)*?(s|z+|ease|se|ese|(e+)s(e)?)|((send|snd|giv(e)?|gib)(\sme)?)|movie(s)?|new|latest|br((o|u)h?)*|^h(e|a)?(l)*(o)*|mal(ayalam)?|t(h)?amil|file|that|find|und(o)*|kit(t(i|y)?)?o(w)?|thar(u)?(o)*w?|kittum(o)*|aya(k)*(um(o)*)?|full\smovie|any(one)|with\ssubtitle(s)?)",
-        "", msg.text, flags=re.IGNORECASE)  # plis contribute some common words
-    query = query.strip() + " movie"
-    g_s = await search_gagala(query)
-    g_s += await search_gagala(msg.text)
-    gs_parsed = []
-    if not g_s:
-        k = await msg.reply("I couldn't find any movie in that name.")
-        await asyncio.sleep(8)
-        await k.delete()
+async def advantage_spell_chok(client, msg):
+    user_id = msg.from_user.id
+    chat_id = msg.chat.id
+    settings = await get_settings(msg.chat.id)
+    try:
+        st = await client.get_chat_member(chat_id, user_id)
+    except ValueError:
         return
-    regex = re.compile(r".*(imdb|wikipedia).*", re.IGNORECASE)  # look for imdb / wiki results
-    gs = list(filter(regex.match, g_s))
-    gs_parsed = [re.sub(
-        r'\b(\-([a-zA-Z-\s])\-\simdb|(\-\s)?imdb|(\-\s)?wikipedia|\(|\)|\-|reviews|full|all|episode(s)?|film|movie|series)',
-        '', i, flags=re.IGNORECASE) for i in gs]
-    if not gs_parsed:
-        reg = re.compile(r"watch(\s[a-zA-Z0-9_\s\-\(\)]*)*\|.*",
-                         re.IGNORECASE)  # match something like Watch Niram | Amazon Prime
-        for mv in g_s:
-            match = reg.match(mv)
-            if match:
-                gs_parsed.append(match.group(1))
-    user = msg.from_user.id if msg.from_user else 0
-    movielist = []
-    gs_parsed = list(dict.fromkeys(gs_parsed))  # removing duplicates https://stackoverflow.com/a/7961425
-    if len(gs_parsed) > 3:
-        gs_parsed = gs_parsed[:3]
-    if gs_parsed:
-        for mov in gs_parsed:
-            imdb_s = await get_poster(mov.strip(), bulk=True)  # searching each keyword in imdb
-            if imdb_s:
-                movielist += [movie.get('title') for movie in imdb_s]
-    movielist += [(re.sub(r'(\-|\(|\)|_)', '', i, flags=re.IGNORECASE)).strip() for i in gs_parsed]
-    movielist = list(dict.fromkeys(movielist))  # removing duplicates
-    if not movielist:
-        k = await msg.reply("I couldn't find anything related to that. Check your spelling")
-        await asyncio.sleep(8)
-        await k.delete()
+    re_pattern = re.search(r'malayalam|t(h)?amil|hind(h)?i|telugu|korean\sfil(i)?m|movie(s)?|series|und(o+)|ki(t+)(u(o+)|(o+))|t(h)?(a|e)r(u(o+)|(o+))|movie\ss(e|a)nd|movie\sund(o+)|padam', msg.text, flags=re.I)
+    TEMP = settings.get('spelltemp', SPELLTEMP)
+    spellCap = TEMP.format(
+        query = msg.text.capitalize(),
+        first = msg.from_user.first_name,
+        last = msg.from_user.last_name,
+        mention = msg.from_user.mention,
+        chatname = msg.chat.title,
+    )
+    if msg.text.startswith("/"):
+        return #ignore commands
+    if re.findall(r"((^\/|^,|^!|^\.|^[\U0001F600-\U000E007F]).*)", msg.text):
         return
-    SPELL_CHECK[msg.id] = movielist
-    btn = [[
-        InlineKeyboardButton(
-            text=movie.strip(),
-            callback_data=f"spolling#{user}#{k}",
-        )
-    ] for k, movie in enumerate(movielist)]
-    btn.append([InlineKeyboardButton(text="Close", callback_data=f'spolling#{user}#close_spellcheck')])
-    await msg.reply("I couldn't find anything related to that\nDid you mean any one of these?",
-                    reply_markup=InlineKeyboardMarkup(btn))
-
+    if not st.status in ads:
+        if re_pattern:
+            err_msg = await msg.reply_text(
+                text=f"<b>Hey {msg.from_user.mention} 😢,</b>\n\n"
+                     f"<b>Dont use words like:</b>\n"
+                     f"(Movies|Series) (send|Kittuo|Tharuo)\n"
+                     f"(Malayalam | Hindi | Tamil |Telugu)\n\n"
+                     f"<b>NOTE:</b> Just copy paste the movie name from GOOGLE\n"
+                     f"If you still dont get it try removing the special characters like: (' - :)",
+                parse_mode=enums.ParseMode.HTML,
+                disable_web_page_preview=True
+            )
+            await asyncio.sleep(50)
+            await err_msg.delete()
+        else:
+            snd_msg = await msg.reply_text(
+                text=spellCap,
+                reply_markup=InlineKeyboardMarkup([[
+                    InlineKeyboardButton("🔍 Search on Google 🔍", url=f"https://google.com/search?q={msg.text.replace(' ','+')}")
+                ],[
+                    InlineKeyboardButton("Reasons for unavailability", callback_data="reason")
+                ]]),
+                parse_mode=enums.ParseMode.HTML,
+                disable_web_page_preview=True
+            )
+            await asyncio.sleep(70)
+            await snd_msg.delete()
 
 async def manual_filters(client, message, text=False):
     group_id = message.chat.id
