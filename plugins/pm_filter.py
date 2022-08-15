@@ -130,8 +130,8 @@ async def reason_text_cb(c: Client, q: CallbackQuery):
         text="The reasons for unavailability:\n"
              "- Movie is released in Theatre\n"
              "- Movie file is not available in Telegram \n"
-             "- Not available on OTT platforms\n",
-             "- Your text contains special characters like (-:')"
+             "- Not available on OTT platforms\n"
+             "- Your text contains special characters like (-:')", 
         disable_web_page_preview=True,
     )
     await asyncio.sleep(60)
