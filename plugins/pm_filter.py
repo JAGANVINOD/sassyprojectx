@@ -752,7 +752,7 @@ async def advantage_spell_chok(client, msg):
                      f"<b>Dont use words like:</b>\n"
                      f"(Movies|Series) (send|Kittuo|Tharuo)\n"
                      f"(Malayalam | Hindi | Tamil |Telugu)\n\n"
-                     f"<b>NOTE:</b> Just copy paste the movie name from GOOGLE\n"
+                     f"<b>NOTE:</b> Just copy paste the movie name from 𝗚𝗢𝗢𝗚𝗟𝗘\n"
                      f"If you still dont get it try removing the special characters like: (' - :)",
                 parse_mode=enums.ParseMode.HTML,
                 disable_web_page_preview=True
