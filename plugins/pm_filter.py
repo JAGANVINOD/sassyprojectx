@@ -27,7 +27,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
-SPELLTEMP = os.environ.get("SPELLTEMP", "Hehe")[:4550]
+SPELLTEMP = environ.get("SPELLTEMP", "<b>➲ 𝖸𝗈𝗎𝗋 𝖱𝖾𝗊𝗎𝖾𝗌𝗍:</b> {query}\n<b>➲ 𝖱𝖾𝗊𝗎𝖾𝗌𝗍𝖾𝖽 𝖻𝗒:</b> {mention}\n<b>➲ Status: #NotFound</b>\n\n<b>📝 TO-DO</b>:\n• Click the <b>SEARCH</b> button and copy paste the movie name that you see.\n• If you still don't get the files, click the <b>REASONS</b> button to find out the reason for the unavailability.")
 BUTTONS = {}
 SPELL_CHECK = {}
 
