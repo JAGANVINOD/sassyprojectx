@@ -131,7 +131,8 @@ async def reason_text_cb(c: Client, q: CallbackQuery):
              "»  Movie is released in Theatre\n"
              "»  Movie file is not available in Telegram \n"
              "»  Not available on OTT platforms\n"
-             "»  Your text contains special characters like (-:')", 
+             "»  Your text contains special characters like (-:')\n"
+             "»  To confirm the availability, contact the admins", 
         disable_web_page_preview=True,
     )
     await asyncio.sleep(60)
