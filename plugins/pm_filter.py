@@ -758,7 +758,7 @@ async def advantage_spell_chok(client, msg):
                 parse_mode=enums.ParseMode.HTML,
                 disable_web_page_preview=True
             )
-            await asyncio.sleep(50)
+            await asyncio.sleep(60)
             await err_msg.delete()
         else:
             snd_msg = await msg.reply_text(
