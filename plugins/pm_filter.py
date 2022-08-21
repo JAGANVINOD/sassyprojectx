@@ -128,6 +128,7 @@ async def reason_text_cb(c: Client, q: CallbackQuery):
         return await q.answer(f"{q.from_user.first_name},  This is not for you!!😄", show_alert=True)
     heh = await q.message.edit_text(
         text="<b>The reasons for unavailability</b>:\n"
+        
              "»  Movie is released in Theatre\n"
              "»  Movie file is not available in Telegram \n"
              "»  Not available on OTT platforms\n"
