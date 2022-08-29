@@ -125,7 +125,7 @@ async def reason_text_cb(c: Client, q: CallbackQuery):
     q_user = q.from_user.id
     og_user = q.message.reply_to_message.from_user.id
     if int(q_user) != int(og_user):
-        return await q.answer(f"{q.from_user.first_name},  This is not for you!!😄", show_alert=True)
+        return await q.answer(f"Its for{msg.from_user.mention}, You have no Reason to Tap this 😄", show_alert=True)
     heh = await q.message.edit_text(
         text="<b>The reasons for unavailability</b>:\n\n"
 
