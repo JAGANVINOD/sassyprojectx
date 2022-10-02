@@ -708,8 +708,9 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap =f"<b>Title:</b> {search}\n"
-              f"<b>User:</b> {msg.from_user.mention}"
+        cap =f"<b>Title:</b>{search}\n"
+             f"<b>User:</b>{msg.from_user.mention}\n"
+             f"© {msg.chat.title}"
             
             
     if imdb and imdb.get('poster'):
