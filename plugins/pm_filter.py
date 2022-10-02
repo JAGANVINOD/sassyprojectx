@@ -708,7 +708,7 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap =f"<b>Title:</b>{search}\n"
+        cap =f"<b>Title :</b>{search}\n"
 
             
             
