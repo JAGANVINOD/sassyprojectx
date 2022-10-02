@@ -709,7 +709,7 @@ async def auto_filter(client, msg, spoll=False):
         )
     else:
         cap = f"<b>Title:</b> {search}\n"
-              f"<b>User:</b> {msg
+            
             
     if imdb and imdb.get('poster'):
         try:
