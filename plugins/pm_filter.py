@@ -708,7 +708,7 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap =f"<b>Title : </b>{search}\n<b>User : </b>{msg.from_user.mention}\n<b>ID : </b>{q.from_user.id}\n<b>Results : </b>{total_results}\n\n<b>© : {msg.chat.title}</b>"
+        cap =f"<b>Title : </b>{search}\n<b>User : </b>{msg.from_user.mention}\n<b>ID : </b>{query.from_user.id}\n<b>Results : </b>{total_results}\n\n<b>© : {msg.chat.title}</b>"
        
             
             
