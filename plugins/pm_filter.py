@@ -708,7 +708,7 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap =f"<b>Title : </b>{search}\nUser : {msg.from_user.mention}\nTotal Results : {total_results}
+        cap =f"<b>Title : </b>{search}\n User : {msg.from_user.mention}\n Results : {total_results}
        
             
             
